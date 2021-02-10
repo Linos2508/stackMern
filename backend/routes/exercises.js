@@ -82,6 +82,11 @@ router.route('/:id').delete((req,res) => {
 })
 
 router.route('/:id').put((req,res) => {
+    let response = {
+        "result":0,
+        "data": {},
+        "error": ""
+    }
     Exercise.findById(req.params.id)
     .then(exercise => {
         exercise.username = req.body.username;
