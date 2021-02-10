@@ -1,0 +1,20 @@
+.pages {
+    background-color: black;
+    padding: 20px 10px;
+    text-align: right; 
+    ul {
+      list-style: none;
+        li {
+            display: inline-block;
+            margin: 0 10px;
+            a {
+                color: white;
+                text-decoration: none;
+                &.active {
+                    border-bottom: 1px solid white;
+                }
+            }
+        }
+    }
+  }
+  

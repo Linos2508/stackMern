@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-// import Login from "./pages/Login.jsx";
+import Users from "./pages/Users.jsx";
+import Exercises from "./pages/Exercises.jsx";
 import logo from './logo.svg';
 
 export default function App() {
@@ -10,16 +11,20 @@ export default function App() {
         path="/"
         exact
         render={(props) => (
-          <Login
-            boot={boot}
-            language={changeBoot}
+          <Users
             {...props}
-            theme={switchTheme}
+          />
+        )}
+      />
+      <Route
+        path="/Exercises"
+        exact
+        render={(props) => (
+          <Exercises
+            {...props}
           />
         )}
       />
     </BrowserRouter>
   );
 }
-
-export default App;

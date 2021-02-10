@@ -1,0 +1,25 @@
+.container{
+    margin: auto;
+}
+.addClientsModal {
+    .generalInfo{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 20px;
+        article {
+            input{
+                border-radius: 10px;
+                padding: 5px;
+            }
+        }
+    }
+    .addButton {
+        text-align: center;
+        button {
+            border: none;
+            color: white;
+            background-color: black;
+            padding: 10px 50px;
+        }
+    }
+}
