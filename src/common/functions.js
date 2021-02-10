@@ -7,3 +7,6 @@ export function inArray(needle, haystack = []) {
     }
     return false;
 }
+export function getBaseApi() {
+    return "http://localhost:5000";
+}

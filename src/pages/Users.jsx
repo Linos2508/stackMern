@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useMemo } from "react";
 import PureModal from "react-pure-modal";
 import DataTable from "react-data-table-component";
-import {inArray} from "../common/functions";
+import {inArray, getBaseApi} from "../common/functions";
 import Header from "../components/Header.jsx";
-import RemoveIcon from "../assets/images/remove-gold.svg";
 import CloseIcon from "../assets/images/close.svg";
 import "../styles/Users.scss";
+import swal from "sweetalert";
 
 export default function Users(props) {
     const [filterText, setFilterText] = useState("");
-    const [method, setMethod] = useState("POST")
     const [data,setData] = useState([{"_id":"1"}]);
     const [addModal, setAddModal] = useState(false);
     
@@ -33,22 +32,6 @@ export default function Users(props) {
           name: "Updated At",
           selector: "updatedAt",
           sortable: true,
-        },
-        {
-          name: "Remove",
-          cell: (row) => (
-            <button>
-              <img src={RemoveIcon} alt="Remove" />
-            </button>
-          ),
-        },
-        {
-          name: "Edit",
-          cell: (row) => (
-            <button onClick={() => setAddModal(true)}>
-              <img src={RemoveIcon} alt="Remove" />
-            </button>
-          ),
         },
       ];
     const filteredItems = data.filter((item) => {
@@ -89,8 +72,50 @@ export default function Users(props) {
         </article>
       );
     const subHeaderComponentMemo = useMemo(() => {
-        return <FilterComponent onFilter={(e) => setFilterText(e.target.value)} />;
-      }, []);
+      return <FilterComponent onFilter={(e) => setFilterText(e.target.value)} />;
+    }, []);
+    useEffect(() => {
+        getUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
+    const getUsers = () =>{
+        fetch(getBaseApi() + "/users/")
+        .then(res => res.json())
+        .then(response => {
+            if (response.result){
+                setData(response.data);
+            }else{
+                swal({title: "Error", icon: "error", text:response.error.name})
+            }
+        }).catch((error) => swal({title: "Error", icon: "error", text:error.message}))
+    }
+    const onSubmitInsertUser = (e) => {
+      e.preventDefault();
+      let data = {
+        username: e.target[0].value
+      }
+      fetch(getBaseApi() + "/users/add",{
+        method: "POST",
+        body: JSON.stringify(data),
+        headers:{
+          "Content-Type": "application/json"
+        }
+      }).then(res => res.json())
+      .then(response => {
+        if (response.result){
+          swal({title: "Success", icon: "success", text:"Change was made correctly"})
+          setAddModal(false);
+          getUsers();
+        }
+        else{
+          setAddModal(false);
+          swal({title: "Error", icon: "error", text:response.error.name})
+        }
+      }).catch((error) => {
+        setAddModal(false);
+        swal({title: "Error", icon: "error", text:error.message})
+      })
+    }
     return(
         <>
             <Header active="users"/>
@@ -114,7 +139,7 @@ export default function Users(props) {
                 }
             >
                 <h2>Client Information</h2>
-                <form className="addClientsModal">
+                <form className="addClientsModal" onSubmit={e => onSubmitInsertUser(e)}>
                     <div className="generalInfo">
                         <article>
                             <label htmlFor="userName">User Name</label>
